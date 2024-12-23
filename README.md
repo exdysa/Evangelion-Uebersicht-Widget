@@ -1,74 +1,61 @@
 # Evangelion-Übersicht-Widget
 
-## Installation
-Who am I kidding, the only thing you need to know is this is a widget for [Übersicht](http://tracesof.net/uebersicht/).
+This is a widget for [Übersicht](http://tracesof.net/uebersicht/).
 
-* Quick Installation
+It looks like this:
+
+![A screenshot of a MacOS desktop with a black and white hex pattern decoring the lower left and upper rightcorners](https://github.com/exdysa/Evangelion-Uebersicht-Widget/blob/f28d300caaaf8605a63175b134e557e49cff1349/screenshot2.png)
+
+I encountered some server errors with the original project, and in the process I learned the original shell scripts of this widget were writing countless files to my hard drive.
+
+I cannot accept this behavior.
+The system status routines are now tidy and translated to Python, which is included with all MacOS systems.
+
+* Setup
 	* Install [Übersicht](http://tracesof.net/uebersicht/)
-	* Download this [widget](https://raw.githubusercontent.com/jeticg/Evangelion-Uebersicht-Widget/master/Evangelion_style_dashboard.widget.zip)
+	* Download the [widget archive](https://raw.githubusercontent.com/exdysa/Evangelion-Uebersicht-Widget/NERV/EVA_ueber-widget.py.zip)
 	* Move this widget into Übersicht folder.
-	* Enjoy it!
+	* Thank you for looking forward to it!
 
 ## Instruction
 
-If you run into troubles with clicking, please check your Übersicht settings.
+Übersicht's `Preferences...` menu has `Interaction : Enable Interaction` checked by defualt. Please ensure this is so if you want to click the widget tiles.
 
-The interface is MULTI-LANGUAGE! So don't worry if you don't speak German. Supported languages:
+## Supported Languages
 
 * Deutsch
 * English
 
-## Click to update!
-You can update Evangelion Übersicht Widget (version >= 0.X8a) simply by clicking the update button. Not that there will be frequent updates, but it saves time. I'll try out some ways to make updating even cooler, given time that is.
-
-![alt text](https://github.com/jeticg/Evangelion-Uebersicht-Widget/raw/master/support/updateButton.png "Say hi to update button!")
-
-## Memory Usage VS Memory Pressure
-As of version 0.X11a, the memory cell will show memory pressure levels (NORMAL, WARN, CRITICAL) rather than the memory usage percentage. The reason behind this move is simple: **memory usage percentage makes little sense in OSX now.**
-
-**To explain:** A few years ago, OSX implemented a new virtual memory technology called memory compression (OK it's actually rather ancient, but people stopped using it as memory got much cheaper back in the 90s). Imagine you have a lot of stuff taking up memory, but you cannot tell exactly how much because you do not know how many of them are compressed. Therefore, memory usage percentage no longer matters as much as it looks like. Instead, we use memory pressure levels, which shows the degree to which the performance is slowed down by memory usage. OSX defines 3 levels: **NORMAL**, **WARN**, **CRITICAL**:
+## Features
+- Memory pressure levels (NORMAL, WARN, CRITICAL)
 
 *  **NORMAL:** Everything is fine. No performance issue!
-*  **WARN:** There might be noticeable drop in performance. The user is advised to clean up the memory (or upgrade the RAM).
-*  **CRITICAL:** The computer will likely freeze up, and the user should terminate some certain processes.
+*  **WARN:** There might a be noticeable drop in performance.
+*  **CRITICAL:** The computer will likely freeze up, and the user should terminate some processes.
 
-In short, take actions when the memory cell turns red!
+- CPU Usage
+- Battery level
+- Time
+- Network traffic
+- Public IP Address
 
-## Major Update Notice!
-Please consider updating if you are still using widget earlier than 0.X2a. The newer version has greatly alleviated the performance issues. Now it uses only 10% of energy and 20% of CPU compared to the previous versions.
+- Now Playing and music player controls for iTunes
+- Icons for up to 5 Mounted volumes
+- Optional voice alerts (off by default)
+- Update notification
+- CPU Utilization / Low Battery alarm
+- Trash size and Empty trash
 
-## About
-This widget is an Evangelion Übersicht Widget, displaying information through a huge amount of cells on your desktop.
+### Contact
+* [Open a new issue to provide enhancement suggestions, identify difficulties, or share feedback!](https://github.com/exdysa/Evangelion-Uebersicht-Widget/issues)
 
-If you leaves nothing on your desktop except for less than six mounted volumes (system volumes, connected servers etc.), this widget can replace your desktop completely.
+* [Contact the original author ](jetic@me.com)
 
-### Currently the widget could show:
+<details ><summary>
 
-1. Time
-2. CPU and memory usage (memory pressure)
-3. Battery status
-4. Trash size
-5. Your public ip address
-6. Artist, title and Album over of what currently being played on iTunes. (You can also control iTunes!)
-7. First 5 of all your mounted volumes in alphabetical order
-8. Network traffic
-9. Alert on DoNotDisturb mode
-10. Vocal notice on alerts. Default is OFF, turn it on by setting config.Voice to true.
+## Original Changelog
 
-### Special features
-* Update button displayed when new version is released.
-* Alarm system, triggers when CPU usage is too high or battery drops to below 20% without charging
-* Empty your trash bin by clicking the trash cell
-* Open up a volume by clicking it
-
-### Feedback
-
-* [Contact me](jetic@me.com).
-* Please note that this widget is still under development and open for suggestions. If you have any idea on how to improve this widget or new features you would like to see, please do not hesitate to contact me.
-* If you are encountering any problem with the display, please click cell number 32 and see the original console output and contact me with the information you see in the output, otherwise it could be hard to determine what went wrong.
-
-
-## Updates
+</summary>
 
 **0.X14.4a**
 * Attempting to fix iTunes for Catalina
@@ -270,3 +257,4 @@ If you leaves nothing on your desktop except for less than six mounted volumes (
 * Added General UI
 * Added Battery
 * Added Time and Day
+</details>

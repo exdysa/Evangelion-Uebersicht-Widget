@@ -780,16 +780,11 @@ afterRender: (domEl) ->
     $(domEl).on 'click', '.iTunesPlay', => @run "osascript -e 'tell application \"iTunes\" to play'"
     $(domEl).on 'click', '#TrashCell', => @run "osascript -e 'tell application \"Finder\" to empty'"
 #   Command to open up mounted volumes
-    $(domEl).on 'click', '#66', => @run "ls /Volumes/ | awk -F'\t' '{ print $0}' > tmp.txt;i=1; cat tmp.txt | sed -e 's/[ ]/\\ /g ' | while read line; do if [ \"$i\" -eq 1 ]; then open /Volumes/\"${line}\"; fi; let i=i+1; done; rm tmp.txt
-"
-    $(domEl).on 'click', '#69', => @run "ls /Volumes/ | awk -F'\t' '{ print $0}' > tmp.txt;i=1; cat tmp.txt | sed -e 's/[ ]/\\ /g ' | while read line; do if [ \"$i\" -eq 2 ]; then open /Volumes/\"${line}\"; fi; let i=i+1; done; rm tmp.txt
-"
-    $(domEl).on 'click', '#72', => @run "ls /Volumes/ | awk -F'\t' '{ print $0}' > tmp.txt;i=1; cat tmp.txt | sed -e 's/[ ]/\\ /g ' | while read line; do if [ \"$i\" -eq 3 ]; then open /Volumes/\"${line}\"; fi; let i=i+1; done; rm tmp.txt
-"
-    $(domEl).on 'click', '#62', => @run "ls /Volumes/ | awk -F'\t' '{ print $0}' > tmp.txt;i=1; cat tmp.txt | sed -e 's/[ ]/\\ /g ' | while read line; do if [ \"$i\" -eq 4 ]; then open /Volumes/\"${line}\"; fi; let i=i+1; done; rm tmp.txt
-"
-    $(domEl).on 'click', '#65', => @run "ls /Volumes/ | awk -F'\t' '{ print $0}' > tmp.txt;i=1; cat tmp.txt | sed -e 's/[ ]/\\ /g ' | while read line; do if [ \"$i\" -eq 5 ]; then open /Volumes/\"${line}\"; fi; let i=i+1; done; rm tmp.txt
-"
+    $(domEl).on 'click', '#66', => @run "python -c 'from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(0)'"
+    $(domEl).on 'click', '#69', => @run "python -c 'from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(1)'"
+    $(domEl).on 'click', '#72', => @run "python -c 'from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(2)'"
+    $(domEl).on 'click', '#62', => @run "python -c' from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(3)'"
+    $(domEl).on 'click', '#65', => @run "python -c' from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(4)'"
 
     $(domEl).on 'click', '#27', =>
         $(domEl).find("#27 .contentS").text("loading")
@@ -939,7 +934,7 @@ update: (output, domEl) ->
         window.tiktok = 0
     # Battery
     if (window.tiktok == 0)
-        @run "sh Eva.widget/battery.sh", (error, stdout, stderr) ->
+        @run "python -c 'from refresh import fetch_ '", (error, stdout, stderr) ->
             if (stdout.indexOf("InternalBattery") > -1)
                 window.Batterievalues = stdout.split(' ')
             if (Batterievalues[0].indexOf("InternalBattery") > -1)
@@ -977,7 +972,8 @@ update: (output, domEl) ->
                     $(domEl).find('.BatStatus').text("#{Batterievalues[2]}")
                 $(domEl).find('.BatRe').text("#{Batterievalues[3]}")
     # CPU and Memory
-    @run "sh Eva.widget/cpu_mem.sh", (error, stdout, stderr) ->
+
+    @run "python -c 'from refresh import fetch_cpu_and_mem_usage; fetch_cpu_and_mem_usage'", (error, stdout, stderr) ->
         stdout = stdout.split('\n')
         window.CPUUsage = stdout[0].split(' ')
         window.MemUsage = stdout[1].split(' ')
@@ -1152,6 +1148,7 @@ update: (output, domEl) ->
                 colourChange(".a3", config.colourIdle)
     )
 
+    # Tile 31 version
     $('#31').hover (
         ->
             $(domEl).find("#31 .id").text("#{Version}")
@@ -1159,7 +1156,7 @@ update: (output, domEl) ->
         ->
             $(domEl).find("#31 .id").text("31")
     )
-
+    # tile 25 signature
     $('#25').hover (
         ->
             $(domEl).find("#25 .id").text("Jetic")
@@ -1167,16 +1164,17 @@ update: (output, domEl) ->
         ->
             $(domEl).find("#25 .id").text("25")
     )
-    #$('#32').hover (
-    #    ->
-    #        colourChange("#32", config.colourIdleHover)
-    #        colourChange(".a4", config.colourIdleHover)
-    #        $(domEl).find(".a4x").css("visibility", "visible")
-    #), (
-    #    ->
-    #        colourChange("#32", config.colourIdle)
-    #        colourChange(".a4", "rgba(10,10,10,0)")
-    #        $(domEl).find(".a4x").css("visibility", "hidden")
-    #)
-    # Outputting all the information for debug
-    # $(domEl).find('.OP').text("#{output}")
+    # tile 32
+    $('#32').hover (
+       ->
+           colourChange("#32", config.colourIdleHover)
+           colourChange(".a4", config.colourIdleHover)
+           $(domEl).find(".a4x").css("visibility", "visible")
+    ), (
+       ->
+           colourChange("#32", config.colourIdle)
+           colourChange(".a4", "rgba(10,10,10,0)")
+           $(domEl).find(".a4x").css("visibility", "hidden")
+    )
+    Outputting all the information for debug
+    $(domEl).find('.OP').text("#{output}")

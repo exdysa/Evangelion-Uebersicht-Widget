@@ -1,0 +1,19 @@
+
+name: Zip Widget
+
+on:
+  push:
+    branches: [ "NERV" ]
+  pull_request:
+    branches: [ "NERV" ]
+
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Zip file from repo
+        run: |
+            git archive --format=zip --output=EVA_ueber-widget.py.zip NERV Eva.widget/
+

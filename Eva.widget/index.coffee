@@ -12,7 +12,7 @@ config = {
     colourIdleHover: "rgba(128,128,128,1)"
     colourWarnHover: "rgba(128,0,0,1)"
     ShowUpdates: true
-    remoteBranch: "dev"
+    remoteBranch: "NERV"
 }
 ## If you do not know how to write HTML/CSS, it is best for you to learn it first before
 ## attempting to customise the UI. Or you can contact me.
@@ -23,11 +23,11 @@ refreshFrequency: 3000
 ## Cells consists of three parts. A main body(nav), a top and a bottom(s and b). Cells are rotated
 ## 90 degrees to the current position. For special cells (Battery cell, iTunes cell), the toppings
 ## and bottoms are slightly different, for example s1, s2, b1, b2, these are modified to cover
-## the gaps between the originally seperated cells. Almost all the elements in the cells are
+## the gaps between the originally separated cells. Almost all the elements in the cells are
 ## positioned manually, this is to ensure that the UI looks exactly the same on different
 ## environments. Übersicht is using the safari engine to render the widgets, therefore the UI under
 ## different versions of Safari could be different, if so please contact me and I'll fix this. There
-## are also classes like a0, a1, a2, a3, a4, these act as collective cell controlls allowing me to
+## are also classes like a0, a1, a2, a3, a4, these act as collective cell controls allowing me to
 ## change the output of all related cells when necessary. ai cells are initially hidden; a1 and a2
 ## are used to adjust the lines so that the cells won't crash into each other; a3 is the battery
 ## cell; a4 is the console output cell; ax hasn't been used. Contents in the cells can use the
@@ -178,7 +178,7 @@ style: """
         top:-95em
     .a0, .a0 s, .a0 b
         @keyframes meow { from { opacity:1; } to { opacity:0.6; }  }
-
+        // MEOW!
     .a1
         margin-right:140em
     .ai
@@ -779,12 +779,13 @@ afterRender: (domEl) ->
     $(domEl).on 'click', '.iTunesPause', => @run "osascript -e 'tell application \"iTunes\" to pause'"
     $(domEl).on 'click', '.iTunesPlay', => @run "osascript -e 'tell application \"iTunes\" to play'"
     $(domEl).on 'click', '#TrashCell', => @run "osascript -e 'tell application \"Finder\" to empty'"
+
 #   Command to open up mounted volumes
-    $(domEl).on 'click', '#66', => @run "python -c 'from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(0)'"
-    $(domEl).on 'click', '#69', => @run "python -c 'from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(1)'"
-    $(domEl).on 'click', '#72', => @run "python -c 'from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(2)'"
-    $(domEl).on 'click', '#62', => @run "python -c' from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(3)'"
-    $(domEl).on 'click', '#65', => @run "python -c' from volumes import SaveVolumes, PopVolumes; instance = SaveVolumes(); instance = PopVolumes(4)'"
+    $(domEl).on 'click', '#66', => @run "python -c 'from volumes import SendToFinderVolume; SendToFinderVolume(0)'"
+    $(domEl).on 'click', '#69', => @run "python -c 'from volumes import SendToFinderVolume; SendToFinderVolume(1)'"
+    $(domEl).on 'click', '#72', => @run "python -c 'from volumes import SendToFinderVolume; SendToFinderVolume(2)'"
+    $(domEl).on 'click', '#62', => @run "python -c' from volumes import SendToFinderVolume; SendToFinderVolume(3)'"
+    $(domEl).on 'click', '#65', => @run "python -c' from volumes import SendToFinderVolume; SendToFinderVolume(4)'"
 
     $(domEl).on 'click', '#27', =>
         $(domEl).find("#27 .contentS").text("loading")
@@ -798,7 +799,7 @@ afterRender: (domEl) ->
             rm -r ../Eva.widget &&
             rm -r ../__MACOSX"
 
-    @run "rm Eva.widget/netstat.ipworking", (error, stdout, stderr) ->
+    #@run "rm Eva.widget/netstat.ipworking", (error, stdout, stderr) ->
     @run 'csrutil status', (error, stdout, stderr) ->
         if stdout
             console.log stdout
@@ -904,7 +905,7 @@ update: (output, domEl) ->
 
     getTime = () ->
         #   Processing time
-        # This is for outputing the time. Nothing really
+        # This is for outputting the time. Nothing really
         date = new Date()
         hour = date.getHours()
         minutes = date.getMinutes()
@@ -934,7 +935,7 @@ update: (output, domEl) ->
         window.tiktok = 0
     # Battery
     if (window.tiktok == 0)
-        @run "python -c 'from refresh import fetch_ '", (error, stdout, stderr) ->
+        @run "python -c 'from sysstate import GetBattInfo; GetBattInfo()'", (error, stdout, stderr) ->
             if (stdout.indexOf("InternalBattery") > -1)
                 window.Batterievalues = stdout.split(' ')
             if (Batterievalues[0].indexOf("InternalBattery") > -1)
@@ -971,9 +972,9 @@ update: (output, domEl) ->
                 else
                     $(domEl).find('.BatStatus').text("#{Batterievalues[2]}")
                 $(domEl).find('.BatRe').text("#{Batterievalues[3]}")
-    # CPU and Memory
 
-    @run "python -c 'from refresh import fetch_cpu_and_mem_usage; fetch_cpu_and_mem_usage'", (error, stdout, stderr) ->
+    # CPU and Memory
+    @run "python -c 'from sysstate import GetCPUAndMemInfo; GetCPUAndMemInfo()'", (error, stdout, stderr) ->
         stdout = stdout.split('\n')
         window.CPUUsage = stdout[0].split(' ')
         window.MemUsage = stdout[1].split(' ')
@@ -985,6 +986,7 @@ update: (output, domEl) ->
             $(domEl).find('.MEMU').text("WARNIN")
         else if (MemUsage.indexOf("4") > -1)
             $(domEl).find('.MEMU').text("CRITICAL")
+
     # Trash
     @run "du -ch ~/.Trash | grep total | cut -c 1-5", (error, stdout, stderr) ->
         window.Trashvalues = stdout.split(' ')
@@ -994,8 +996,9 @@ update: (output, domEl) ->
             $(domEl).find('.TrashSize').text("#{TrashEmpty}")
         else
             $(domEl).find('.TrashSize').text("#{Trashvalues}")
+
     # Network status
-    @run "sh Eva.widget/netstat.sh", (error, stdout, stderr) ->
+    @run "python -c 'from netstat import RecordNetworkState; RecordNetworkState()'", (error, stdout, stderr) ->
         stdout = stdout.split('\n')
         window.Networkvalues = stdout[0].split(' ')
         window.IPaddress     = stdout[1]
@@ -1016,9 +1019,11 @@ update: (output, domEl) ->
             $(domEl).find('.NetU').text("#{NetworkUp}")
         if (NetworkDl?)
             $(domEl).find('.NetD').text("#{NetworkDl}")
+
     # Do Not Disturb
     @run "defaults read ~/Library/Preferences/ByHost/com.apple.notificationcenterui doNotDisturb", (error, stdout, stderr) ->
         window.Disturbvalues = stdout[0]
+
     # iTunes
     @run "sh Eva.widget/iTunes.sh 2>/dev/null", (error, stdout, stderr) ->
         if (stdout.indexOf("osascript: Eva.widget/iTunes.scp:") > -1)
@@ -1060,9 +1065,10 @@ update: (output, domEl) ->
             $(domEl).find('#rate5').css("visibility","visible")
         else
             $(domEl).find('#rate5').css("visibility","hidden")
+
     # Disk
     if (window.tiktok == 0)
-        @run "ls -F /Volumes/ | awk -F'\t' '{ print $0}'", (error, stdout, stderr) ->
+        @run "python -c 'from volumes import RevealVolumes; show = RevealVolumes(); show.and_list()'", (error, stdout, stderr) ->
             stdout = stdout.split('\n')
             if (stdout.length > 1)
                 diskDisplay("#66", stdout[0])

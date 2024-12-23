@@ -7,28 +7,28 @@ import json
 VOLUMES_PATH = "/Volumes"
 BACKUP_FILE = os.path.join(os.getcwd(),"volumes.json")
 
-class SaveVolumes():
+class RevealVolumes:
 
-    def __init__(self):
+    def and_save(self):
         # List all volumes and write them to a backup file
         volumes = self.list_volumes()
         if volumes:
-            self.write_volumes_to_file(volumes, BACKUP_FILE)
+            self._write_volumes_to_file(volumes, BACKUP_FILE)
 
-    def list_volumes(self) -> list:
+    def and_list(self, console:bool=True) -> list:
         """List all volumes in the /Volumes directory."""
         try:
             volumes = os.listdir(VOLUMES_PATH)         # Use `os.listdir` to get a list of volume names
             volumes = [vol for vol in volumes if not vol.startswith('.')] # Filter out any system-related directories (optional)
+            if volumes and console:
+                [print(vol) for vol in volumes]
             return volumes
         except FileNotFoundError:
             print(f"Error: {VOLUMES_PATH} not found.")
-            return []
         except Exception as e:
             print(f"An error occurred while listing volumes: {e}")
-            return []
 
-    def write_volumes_to_file(self, volumes: list, file_path: str):
+    def _write_volumes_to_file(self, volumes: list, file_path: str):
         """Write the list of volumes to a backup file in JSON format."""
         try:
             with open(file_path, 'w') as f:
@@ -37,7 +37,7 @@ class SaveVolumes():
         except IOError as e:
             print(f"Error writing to {file_path}: {e}")
 
-class PopVolumes():
+class SendToFinderVolume():
     def __init__(self, num):
             volumes = self.read_volumes_from_file(BACKUP_FILE)
 
@@ -47,7 +47,6 @@ class PopVolumes():
                     self.open_volume(volumes[num])
                 except KeyError as error:
                     print(f"{error} Missing volume data, operation ended prematurely.")
-                    return
             else:
                 print("No volumes found to open.")
 
@@ -56,13 +55,10 @@ class PopVolumes():
         try:
             with open(file_path, 'r') as f:
                 volumes = json.load(f)
-            return volumes
         except FileNotFoundError:
             print(f"Error: {file_path} not found.")
-            return []
         except json.JSONDecodeError:
             print(f"Error: {file_path} is not a valid JSON file.")
-            return []
         else:
             print("No volumes found.")
 
@@ -77,6 +73,6 @@ class PopVolumes():
             print(f"Failed to open {volume_name}: {e}")
 
 
-# if __name__ == "__main__":
-#     instance = SaveVolumes()
-#     instance = PopVolumes(0)
+if __name__ == "__main__":
+    RevealVolumes()
+    SendToFinderVolume(0)

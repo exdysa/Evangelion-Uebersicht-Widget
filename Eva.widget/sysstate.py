@@ -2,7 +2,7 @@
 import subprocess
 import re
 
-class GetSysInfo():
+class GetCPUAndMemInfo():
     def __init__(self):
         self.fetch_cpu_and_mem_usage()
         self.fetch_memory_pressure_level()
@@ -19,7 +19,6 @@ class GetSysInfo():
             print(f"Total CPU Usage: {total_cpu_usage:.2f}%")
         except subprocess.CalledProcessError as e:
             print(f"Error fetching CPU usage: {e}")
-            return
 
     def fetch_memory_pressure_level(self):
         try:
@@ -36,7 +35,6 @@ class GetSysInfo():
                 print("Memory pressure level not found.")
         except subprocess.CalledProcessError as e:
             print(f"Error fetching memory pressure level: {e}")
-            return
 
     def fetch_cpu_cores(self):
         try:
@@ -53,7 +51,6 @@ class GetSysInfo():
                 print("Number of CPU cores not found.")
         except subprocess.CalledProcessError as e:
             print(f"Error fetching number of CPU cores: {e}")
-            return
 
 class GetBattInfo():
 
@@ -63,13 +60,11 @@ class GetBattInfo():
             output = result.stdout
         except subprocess.CalledProcessError as e:
             print(f"Error executing pmset command: {e}")
-            return
         else:
             try:
                 battery_info = next(line for line in output.splitlines() if '%' in line) # Split at battery percentage
             except StopIteration:
                 print("No battery information found.")
-                return
 
         fields = [field.strip() for field in battery_info.split(';') if field.strip()] # Split by semicolon, strip leading/trailing whitespace
 
@@ -84,9 +79,8 @@ class GetBattInfo():
         # Print the modified fields
         print(" ".join(modified_fields))
 
-# if __name__ == "__main__":
-#     fetch_cpu_usage()
-#     fetch_memory_pressure_level()
-#     fetch_cpu_cores()
-#     fetch_battery_info()
+if __name__ == "__main__":
+    GetCPUAndMemInfo()
+    GetBattInfo()
+
 

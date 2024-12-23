@@ -19,7 +19,7 @@ The system status routines are now tidy and translated to Python, which is inclu
 
 ## Instruction
 
-Übersicht's `Preferences...` menu has `Interaction : Enable Interaction` checked by defualt. Please ensure this is so if you want to click the widget tiles.
+Übersicht's `Preferences...` menu has `Interaction : Enable Interaction` checked by default. Please ensure this is so if you want to click the widget tiles.
 
 ## Supported Languages
 
